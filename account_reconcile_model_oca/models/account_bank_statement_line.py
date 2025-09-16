@@ -69,8 +69,10 @@ class AccountBankStatementLine(models.Model):
                     rf"""
                     {unaccent("%s")} ~* ('^' || (
                         SELECT STRING_AGG(CONCAT('(?=.*\m', chunk[1], '\M)'), '')
-                        FROM regexp_matches({unaccent('partner.name')}, '\w{{3,}}', 'g')
-                        AS chunk
+                        FROM regexp_matches(
+                            {unaccent("COALESCE(partner.name #>> '{}', partner.name::text)")},
+                            '\w{{3,}}', 'g'
+                        ) AS chunk
                     ))
                     """,
                     text_value,
