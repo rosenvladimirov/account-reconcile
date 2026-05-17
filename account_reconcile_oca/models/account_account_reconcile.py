@@ -6,7 +6,9 @@ from odoo import api, fields, models
 
 class CharId(fields.Id):
     type = "string"
-    column_type = ("varchar", fields.pg_varchar())
+    # Odoo 19: fields.pg_varchar() removed; with no size it returned
+    # the literal "varchar" (same as Char.column_type[1]).
+    column_type = ("varchar", "varchar")
 
 
 class AccountAccountReconcile(models.Model):

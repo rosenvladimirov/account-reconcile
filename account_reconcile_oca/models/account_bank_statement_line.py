@@ -8,7 +8,6 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import Command, _, api, fields, models, tools
 from odoo.exceptions import UserError
-from odoo.fields import first
 from odoo.tools import LazyTranslate, float_compare, float_is_zero
 
 _lt = LazyTranslate(__name__, default_lang="en_US")
@@ -1220,8 +1219,11 @@ class AccountBankStatementLine(models.Model):
             to_amount = self.company_id.currency_id.round(to_amount_company_currency)
         elif self.currency_id == currency and not self.foreign_currency_id:
             liquidity_lines, _suspense_lines, _other_lines = self._seek_for_lines()
+            # Odoo 19: odoo.fields.first removed — rs[:1] is the
+            # behaviour-identical replacement (first record or empty rs).
             real_rate = (
-                first(liquidity_lines).balance / first(liquidity_lines).amount_currency
+                liquidity_lines[:1].balance
+                / liquidity_lines[:1].amount_currency
             )
             to_amount = self.company_id.currency_id.round(currency_amount * real_rate)
         else:
