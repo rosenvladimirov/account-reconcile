@@ -28,7 +28,7 @@ export class ReconcileRenderer extends KanbanRenderer {
                     name: record.data.aggregate_name,
                     balance: record.data.statement_balance_end_real,
                     balanceStr: formatMonetary(record.data.statement_balance_end_real, {
-                        currencyId: record.data.currency_id[0],
+                        currencyId: record.data.currency_id.id,
                     }),
                 });
             }

@@ -187,7 +187,7 @@
     <t t-name="account_reconcile_oca.AccountReconcileChatterWidget">
         <Chatter
             threadModel="this.props.record.fields[this.props.name].relation"
-            threadId="this.props.record.data[this.props.name][0]"
+            threadId="this.props.record.data[this.props.name] and this.props.record.data[this.props.name].id"
         />
     </t>
     <t

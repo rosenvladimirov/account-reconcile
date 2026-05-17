@@ -5,13 +5,16 @@ import {
 import {registry} from "@web/core/registry";
 
 export class FieldSelectionBadgeUncheck extends BadgeSelectionField {
-    async onChange(value) {
-        var old_value = this.props.value;
-        if (this.props.type === "many2one") {
-            old_value = old_value[0];
-        }
-        if (value === old_value) {
-            this.props.update(false);
+    onChange(value) {
+        // Odoo 19: BadgeSelectionField no longer exposes props.value /
+        // props.update / props.type. The current value is the `value`
+        // getter (returns the id for a many2one) and the field type is
+        // the `type` instance attribute. Core already unchecks on
+        // re-select for the "selection" branch, but not for "many2one"
+        // (it only clears when an explicit `false` is passed), so we
+        // keep the override to give many2one the same toggle behaviour.
+        if (value === this.value) {
+            this.props.record.update({[this.props.name]: false});
             return;
         }
         super.onChange(...arguments);

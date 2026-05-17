@@ -20,8 +20,8 @@ export class AccountReconcileDataWidget extends Component {
             this.props &&
             this.props.record &&
             (this.props.record.data.foreign_currency_id ||
-                this.props.record.data.currency_id[0] !==
-                    this.props.record.data.company_currency_id[0] ||
+                this.props.record.data.currency_id.id !==
+                    this.props.record.data.company_currency_id.id ||
                 this.props.record.data[this.props.name].data.some(
                     (item) => item.line_currency_id !== item.currency_id
                 ));
@@ -40,7 +40,6 @@ export class AccountReconcileDataWidget extends Component {
             });
             data[line].amount_currency_format = formatMonetary(
                 data[line].currency_amount,
-                undefined,
                 {
                     currencyId: data[line].line_currency_id,
                 }

@@ -3,7 +3,11 @@ import {ListController} from "@web/views/list/list_controller";
 export class ReconcileMoveLineController extends ListController {
     async openRecord(record) {
         var data = {};
-        data[this.props.parentField] = [record.resId, record.display_name];
+        // Odoo 19: a many2one value in record.update() is an object
+        // {id, display_name} (was an [id, name] array in <=18). When
+        // display_name is omitted, _completeMany2OneValue() resolves it
+        // server-side via web_read.
+        data[this.props.parentField] = {id: record.resId};
         this.props.parentRecord.update(data);
     }
     async clickAddAll() {
