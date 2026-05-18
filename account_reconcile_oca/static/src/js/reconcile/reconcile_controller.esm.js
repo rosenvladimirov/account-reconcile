@@ -89,7 +89,13 @@ export class ReconcileController extends KanbanController {
                 form_view_ref: this.props.context.view_ref,
             },
             display: {controlPanel: false},
-            mode: this.props.mode || "edit",
+            // Odoo 19 removed the `mode` prop from FormController.props
+            // (form_controller.js derives mode from `readonly` now).
+            // formView.props spreads genericProps, so a stray `mode` key
+            // leaks to the controller and OWL strict-props rejects it
+            // ("unknown key 'mode'"). Faithful 18->19 map: mode||"edit"
+            // -> readonly only when the parent is explicitly readonly.
+            readonly: this.props.mode === "readonly",
             resModel: this.props.resModel,
         };
     }
